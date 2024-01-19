@@ -1,4 +1,3 @@
-from grid import TextGrid
 from random import randint
 
 
