@@ -1,3 +1,11 @@
+from random import choice
+from copy import deepcopy
+
+
+def add_pos(a, b):
+    return (a[0] + b[0], a[1] + b[1])
+
+
 class Grid:
     def __init__(self, rows: int, columns: int, default=None):
         self.rows = rows
@@ -6,7 +14,7 @@ class Grid:
 
         for y in range(self.columns):
             for x in range(self.rows):
-                self[(x, y)] = default
+                self[(x, y)] = deepcopy(default)
     
     def __getitem__(self, pos):
         return self.grid[pos]
@@ -18,10 +26,8 @@ class Grid:
         return pos[0] <= 0 and pos[1] <= 0 and pos[0] < self.rows and\
             pos[1] < self.columns
 
-
-class TextGrid(Grid):
-    def __init__(self, rows: int, columns: int, default=""):
-        super().__init__(rows, columns, default)
+    def get_random_cell_pos(self):
+        return choice(list(self.grid.keys()))
     
     def __str__(self) -> str:
         s = ""
