@@ -41,11 +41,3 @@ class RecursiveBacktrackerGrid(Grid):
             if with_cell in self.grid and with_cell not in self.visited_cells and with_cell not in self.completed_cells:
                 unvisited_directions.append(dir)
         return unvisited_directions
-
-
-g = RecursiveBacktrackerGrid(3, 3)
-
-i = 0
-while g.step():
-    i += 1
-print(g)

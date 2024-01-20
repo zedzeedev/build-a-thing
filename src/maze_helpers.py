@@ -1,7 +1,7 @@
 from random import choice
 
 
-POSSIBLE_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (0, 1)]
+POSSIBLE_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (0, -1)]
 DIRECTION_MAP = {
     (-1, 0): 0,
     (1, 0): 1,
