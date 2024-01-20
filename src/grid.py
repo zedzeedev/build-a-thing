@@ -13,6 +13,10 @@ class Grid:
 
     def __setitem__(self, pos, value) -> None:
         self.grid[pos] = value
+    
+    def has_cell(self, pos):
+        return pos[0] <= 0 and pos[1] <= 0 and pos[0] < self.rows and\
+            pos[1] < self.columns
 
 
 class TextGrid(Grid):

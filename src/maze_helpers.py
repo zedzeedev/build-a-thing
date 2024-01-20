@@ -1,10 +1,11 @@
-from random import randint
+from random import randint, choice
+
+
+POSSIBLE_DIRECTIONS = [(0, 1), (1, 0), (-1, 0), (0, 1)]
 
 
 def get_random_dir():
-    x = randint(-1, 1)
-    y = 0 if x != 0 else [-1, 1][randint(0, 1)]
-    return (x, y)
+    choice(POSSIBLE_DIRECTIONS)
 
 
 class MazeGrid:
@@ -29,3 +30,9 @@ class MazeGrid:
     def get_neighboring_wall_pos(self, pos, dir):
         grid_pos = self[pos]
         return ((grid_pos[0] + dir[0]), (grid_pos[1] + dir[1]))
+    
+    def get_neighboring_cell_pos(self, pos, dir):
+        return ((pos[0] + dir[0]), (pos[1] + dir[1]))
+    
+    def get_random_path(self):
+        return choice(self.paths.keys())
