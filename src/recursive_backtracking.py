@@ -1,11 +1,11 @@
 from grid import Grid, add_pos
-from maze_helpers import MazeCell, POSSIBLE_DIRECTIONS, get_random_dir, negate_direction
+from maze_helpers import MazeCell, POSSIBLE_DIRECTIONS, negate_direction
 from random import choice
 
 
 class RecursiveBacktrackerGrid(Grid):
     # [True, True, True, True]
-    # This corrosponds to all walls being active
+    # This corrosponds to all walls being activea
     # [0] -> Left, [1] -> Right, [2] -> Up, [3] -> Down
 
 
@@ -29,9 +29,9 @@ class RecursiveBacktrackerGrid(Grid):
                 self.current_cell = self.visited_cells[-1]
             return True
         dir = choice(unvisited_directions)
-        self.grid[self.current_cell].destroy_wall(dir)
+        self[self.current_cell].destroy_wall(dir)
         self.current_cell = add_pos(self.current_cell, dir)
-        self.grid[self.current_cell].destroy_wall(negate_direction(dir))
+        self[self.current_cell].destroy_wall(negate_direction(dir))
         return True
 
     def get_unvisited_directions(self):

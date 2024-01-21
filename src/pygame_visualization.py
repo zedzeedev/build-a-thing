@@ -1,8 +1,9 @@
 import pygame as pg
 from recursive_backtracking import RecursiveBacktrackerGrid
+from aldous_broder import AldousBroderGrid
 
 
-CELL_SIZE = (9, 9)
+CELL_SIZE = (25, 25)
 
 
 def draw_cell(screen, cell, pos, cell_color, wall_color):
@@ -18,18 +19,23 @@ def draw_cell(screen, cell, pos, cell_color, wall_color):
         pg.draw.line(screen, wall_color, (pos[0], pos[1] + CELL_SIZE[1]), (pos[0] + CELL_SIZE[0], pos[1] + CELL_SIZE[1]))
 
 
-def draw_grid(screen, grid, cell_color, wall_color):
+def draw_grid(screen, grid, cell_color, wall_color, current_cell_color):
     for y in range(grid.columns):
         for x in range(grid.rows):
             pos = (x, y)
             cell = grid[pos]
             cell_pos = (x * CELL_SIZE[0], y * CELL_SIZE[1])
-            draw_cell(screen, cell, cell_pos, cell_color, wall_color)
+            color = cell_color
+            
+            if pos == grid.current_cell:
+                color = current_cell_color
+
+            draw_cell(screen, cell, cell_pos, color, wall_color)
 
 
 screen = pg.display.set_mode((900, 900))
 running = True
-grid = RecursiveBacktrackerGrid(100, 100)
+grid = RecursiveBacktrackerGrid(30, 30)
 
 
 while running:
@@ -39,8 +45,8 @@ while running:
         if event.type == pg.QUIT:
             running = False
     
-    draw_grid(screen, grid, (255, 255, 255), (0, 0, 0))
-    grid.step()
+    draw_grid(screen, grid, (255, 255, 255), (0, 0, 0), (255, 255, 0))
+    print(grid.step())
     pg.display.flip()
 
 
