@@ -2,7 +2,7 @@ import pygame as pg
 from recursive_backtracking import RecursiveBacktrackerGrid
 
 
-CELL_SIZE = (30, 30)
+CELL_SIZE = (9, 9)
 
 
 def draw_cell(screen, cell, pos, cell_color, wall_color):
@@ -29,7 +29,7 @@ def draw_grid(screen, grid, cell_color, wall_color):
 
 screen = pg.display.set_mode((900, 900))
 running = True
-grid = RecursiveBacktrackerGrid(30, 30)
+grid = RecursiveBacktrackerGrid(100, 100)
 
 
 while running:
