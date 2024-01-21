@@ -43,4 +43,5 @@ while running:
     grid.step()
     pg.display.flip()
 
+
 pg.quit()
