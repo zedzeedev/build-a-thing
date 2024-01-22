@@ -1,5 +1,5 @@
 from grid import Grid, add_pos
-from maze_helpers import MazeCell, POSSIBLE_DIRECTIONS, negate_direction, Maze
+from maze.helpers import MazeCell, POSSIBLE_DIRECTIONS, negate_direction, Maze
 from random import choice
 
 

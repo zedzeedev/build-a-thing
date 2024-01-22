@@ -1,8 +1,8 @@
 import pygame as pg
-from recursive_backtracking import RecursiveBacktrackerGrid
-from aldous_broder import AldousBroderGrid
-from hunt_and_kill import HuntAndKillGrid
-from maze_helpers import MazeVisitor
+from maze.recursive_backtracking import RecursiveBacktrackerGrid
+from maze.aldous_broder import AldousBroderGrid
+from maze.hunt_and_kill import HuntAndKillGrid
+from maze.helpers import MazeVisitor
 import time
 
 
@@ -88,8 +88,8 @@ start_time = time.time()
 
 
 step_hunt_and_kill = True
-step_aldous = True
-step_backtracking = True
+step_aldous = False
+step_backtracking = False
 
 
 while running:
