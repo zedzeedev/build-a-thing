@@ -19,7 +19,7 @@ class HuntAndKillGrid(Grid, Maze):
         if len(directions) == 0:
             for y in range(self.columns):
                 for x in range(self.rows):
-                    self.hunted_row = x
+                    self.hunted_row = y
                     pos = (x, y)
 
                     if pos not in self.visited_cells:
@@ -55,5 +55,5 @@ class HuntAndKillGrid(Grid, Maze):
                 visited_driections.append(dir)
         return visited_driections
 
-    def accept(self, visitor):
-        visitor.visit_hunt_and_kill(self)
+    def accept(self, visitor, **kwargs):
+        visitor.visit_hunt_and_kill(self, **kwargs)

@@ -43,5 +43,5 @@ class RecursiveBacktrackerGrid(Grid, Maze):
         return unvisited_directions
 
 
-    def accept(self, visitor):
-        visitor.visit_recursive_backtracking(self)
+    def accept(self, visitor, **kwargs):
+        visitor.visit_recursive_backtracking(self, **kwargs)

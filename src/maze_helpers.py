@@ -30,16 +30,16 @@ class MazeCell:
 
 
 class MazeVisitor:
-    def visit_aldous_broder(self, maze):
+    def visit_aldous_broder(self, maze, **kwargs):
         pass
 
-    def visit_recursive_backtracking(self, maze):
+    def visit_recursive_backtracking(self, maze, **kwargs):
         pass
 
-    def visit_hunt_and_kill(self, maze):
+    def visit_hunt_and_kill(self, maze, **kwargs):
         pass
 
 
 class Maze:
-    def accept(self, visitor):
+    def accept(self, visitor, **kwargs):
         pass

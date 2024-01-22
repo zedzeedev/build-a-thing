@@ -34,5 +34,5 @@ class AldousBroderGrid(Grid, Maze):
         return directions
 
 
-    def accept(self, visitor):
-        visitor.visit_aldous_broder(self)
+    def accept(self, visitor, **kwargs):
+        visitor.visit_aldous_broder(self, **kwargs)
