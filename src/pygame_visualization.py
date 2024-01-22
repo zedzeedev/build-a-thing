@@ -90,7 +90,7 @@ def draw_grid(screen, grid, cell_color, wall_color, current_cell_color, offset=(
             draw_cell(screen, cell, cell_pos, color, wall_color)
 
 
-screen = pg.display.set_mode((1200, 400))
+screen = pg.display.set_mode((1161, 400))
 running = True
 
 first_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), (255, 255, 0))
