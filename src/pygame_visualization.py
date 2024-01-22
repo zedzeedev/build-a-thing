@@ -5,7 +5,7 @@ from hunt_and_kill import HuntAndKillGrid
 from maze_helpers import MazeVisitor
 
 
-CELL_SIZE = (20, 20)
+CELL_SIZE = (12, 12)
 
 
 def draw_cell(screen, cell, pos, cell_color, wall_color):
@@ -90,11 +90,12 @@ def draw_grid(screen, grid, cell_color, wall_color, current_cell_color, offset=(
             draw_cell(screen, cell, cell_pos, color, wall_color)
 
 
-screen = pg.display.set_mode((1500, 900))
+screen = pg.display.set_mode((1200, 400))
 running = True
 
 first_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), (255, 255, 0))
 second_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), (255, 255, 0), (800, 0))
+third_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), (255, 255, 0), (400, 0))
 backtracker = RecursiveBacktrackerGrid(30, 30)
 aldous = AldousBroderGrid(30, 30)
 hunt_and_kill = HuntAndKillGrid(30, 30)
@@ -109,8 +110,10 @@ while running:
     
     backtracker.accept(first_visitor)
     hunt_and_kill.accept(second_visitor)
+    aldous.accept(third_visitor)
     backtracker.step()
     hunt_and_kill.step()
+    aldous.step()
     pg.display.flip()
 
 
