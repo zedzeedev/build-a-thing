@@ -3,6 +3,7 @@ from recursive_backtracking import RecursiveBacktrackerGrid
 from aldous_broder import AldousBroderGrid
 from hunt_and_kill import HuntAndKillGrid
 from maze_helpers import MazeVisitor
+import time
 
 
 CELL_SIZE = (12, 12)
@@ -53,12 +54,12 @@ class PygameGridVisitor(MazeVisitor):
 
     def visit_recursive_backtracking(self, maze, **kwargs):
         def cell_color_decider(pos):
-            if pos == maze.current_cell:
+            if pos in maze.completed_cells:
+                return kwargs["completed_color"]
+            elif pos == maze.current_cell:
                 return kwargs["current_color"]
             elif pos in maze.visited_cells:
                 return kwargs["visited_color"]
-            elif pos in maze.completed_cells:
-                return kwargs["completed_color"]
             return self.cell_color
         self.draw_grid(maze, cell_color_decider)
     
@@ -83,6 +84,12 @@ third_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), (400, 0))
 backtracker = RecursiveBacktrackerGrid(30, 30)
 aldous = AldousBroderGrid(30, 30)
 hunt_and_kill = HuntAndKillGrid(30, 30)
+start_time = time.time()
+
+
+step_hunt_and_kill = True
+step_aldous = True
+step_backtracking = True
 
 
 while running:
@@ -92,13 +99,24 @@ while running:
         if event.type == pg.QUIT:
             running = False
     
+    if step_backtracking and not backtracker.step():
+        print(f"Recursive backtracking took: {time.time() - start_time} seconds")
+        step_backtracking = False
+    
+    if step_hunt_and_kill and not hunt_and_kill.step():
+        print(f"Hunt and Kill took: {time.time() - start_time} seconds")
+        step_hunt_and_kill = False
+    
+    if step_aldous and not aldous.step():
+        print(f"Aldous-Broder took: {time.time() - start_time} seconds")
+        step_aldous = False
+    
     backtracker.accept(first_visitor, current_color=(255, 255, 0), visited_color=(255, 0, 0), completed_color=(0, 255, 0))
     hunt_and_kill.accept(second_visitor, current_color=(255, 255, 0), visited_color=(0, 0, 255), hunted_color=(255, 0, 0), completed_color=(0, 255, 0))
     aldous.accept(third_visitor, current_color=(255, 255, 0), visited_color=(0, 255, 0))
-    backtracker.step()
-    hunt_and_kill.step()
-    aldous.step()
+    
     pg.display.flip()
+    
 
 
 pg.quit()
