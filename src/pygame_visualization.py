@@ -40,7 +40,9 @@ class PygameGridVisitor(MazeVisitor):
     
     def visit_hunt_and_kill(self, maze, **kwargs):
         def cell_color_decider(pos):
-            if pos == maze.current_cell:
+            if pos[1] in maze.completed_rows:
+                return kwargs["completed_color"]
+            elif pos == maze.current_cell:
                 return kwargs["current_color"]
             elif maze.hunted_row != -1 and maze.hunted_row == pos[1]:
                 return kwargs["hunted_color"]
@@ -91,7 +93,7 @@ while running:
             running = False
     
     backtracker.accept(first_visitor, current_color=(255, 255, 0), visited_color=(255, 0, 0), completed_color=(0, 255, 0))
-    hunt_and_kill.accept(second_visitor, current_color=(255, 255, 0), visited_color=(0, 255, 0), hunted_color=(255, 0, 0))
+    hunt_and_kill.accept(second_visitor, current_color=(255, 255, 0), visited_color=(0, 0, 255), hunted_color=(255, 0, 0), completed_color=(0, 255, 0))
     aldous.accept(third_visitor, current_color=(255, 255, 0), visited_color=(0, 255, 0))
     backtracker.step()
     hunt_and_kill.step()

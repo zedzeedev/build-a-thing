@@ -9,6 +9,7 @@ class HuntAndKillGrid(Grid, Maze):
         self.visited_cells = []
         self.current_cell = self.get_random_cell_pos()
         self.hunted_row = -1
+        self.completed_rows = []
     
     def step(self):
         # Handle maze being done here
@@ -18,6 +19,9 @@ class HuntAndKillGrid(Grid, Maze):
         directions = self.get_unvisited_directions()
         if len(directions) == 0:
             for y in range(self.columns):
+                if y in self.completed_rows:
+                    continue
+                completed_tiles = 0
                 for x in range(self.rows):
                     self.hunted_row = y
                     pos = (x, y)
@@ -31,6 +35,10 @@ class HuntAndKillGrid(Grid, Maze):
                         self[self.current_cell].destroy_wall(dir)
                         self[add_pos(self.current_cell, dir)].destroy_wall(negate_direction(dir))
                         return True
+                    else:
+                        completed_tiles += 1
+                if completed_tiles == self.rows:
+                    self.completed_rows.append(y)
             self.hunted_row = -1
             return False
         dir = choice(directions)
