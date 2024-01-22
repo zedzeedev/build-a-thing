@@ -1,9 +1,9 @@
 from grid import Grid, add_pos
-from maze_helpers import MazeCell, POSSIBLE_DIRECTIONS, negate_direction
+from maze_helpers import MazeCell, POSSIBLE_DIRECTIONS, negate_direction, Maze
 from random import choice
 
 
-class AldousBroderGrid(Grid):
+class AldousBroderGrid(Grid, Maze):
     def __init__(self, rows: int, columns: int, default=None):
         super().__init__(rows, columns, MazeCell())
         self.visited_cells = []
@@ -32,3 +32,7 @@ class AldousBroderGrid(Grid):
             if with_dir in self.grid:
                 directions.append(dir)
         return directions
+
+
+    def accept(self, visitor):
+        visitor.visit_aldous_broder(self)

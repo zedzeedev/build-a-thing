@@ -27,3 +27,19 @@ class MazeCell:
     
     def __str__(self) -> str:
         return str(self.walls)
+
+
+class MazeVisitor:
+    def visit_aldous_broder(self, maze):
+        pass
+
+    def visit_recursive_backtracking(self, maze):
+        pass
+
+    def visit_hunt_and_kill(self, maze):
+        pass
+
+
+class Maze:
+    def accept(self, visitor):
+        pass
