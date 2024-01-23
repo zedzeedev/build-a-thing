@@ -3,6 +3,7 @@ from maze.recursive_backtracking import RecursiveBacktrackerGrid
 from maze.aldous_broder import AldousBroderGrid
 from maze.hunt_and_kill import HuntAndKillGrid
 from maze.helpers import MazeVisitor
+from pathfinding.astar import find_path_astar
 import time
 
 
@@ -90,7 +91,7 @@ start_time = time.time()
 step_hunt_and_kill = True
 step_aldous = False
 step_backtracking = False
-
+astar_path = None
 
 while running:
     screen.fill((0, 0, 0))
@@ -105,6 +106,7 @@ while running:
     
     if step_hunt_and_kill and not hunt_and_kill.step():
         print(f"Hunt and Kill took: {time.time() - start_time} seconds")
+        astar_path = find_path_astar(hunt_and_kill, (0, 0), (29, 29), )
         step_hunt_and_kill = False
     
     if step_aldous and not aldous.step():
@@ -112,7 +114,12 @@ while running:
         step_aldous = False
     
     backtracker.accept(first_visitor, current_color=(255, 255, 0), visited_color=(255, 0, 0), completed_color=(0, 255, 0))
-    hunt_and_kill.accept(second_visitor, current_color=(255, 255, 0), visited_color=(0, 0, 255), hunted_color=(255, 0, 0), completed_color=(0, 255, 0))
+    if step_hunt_and_kill:
+        hunt_and_kill.accept(second_visitor, current_color=(255, 255, 0), visited_color=(0, 0, 255), hunted_color=(255, 0, 0), completed_color=(0, 255, 0))
+    else:
+        for cell in astar_path:
+            pos = (cell[0] * CELL_SIZE[0] , cell[1] * CELL_SIZE[1])
+            draw_cell(screen, hunt_and_kill.grid[cell], pos, (255, 255, 0), (0, 0, 0))
     aldous.accept(third_visitor, current_color=(255, 255, 0), visited_color=(0, 255, 0))
     
     pg.display.flip()
