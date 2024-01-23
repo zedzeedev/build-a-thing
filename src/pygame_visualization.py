@@ -3,7 +3,7 @@ from maze.recursive_backtracking import RecursiveBacktrackerGrid
 from maze.aldous_broder import AldousBroderGrid
 from maze.hunt_and_kill import HuntAndKillGrid
 from maze.helpers import MazeVisitor
-from pathfinding.astar import find_path_astar
+from pathfinding import find_path_astar
 import time
 
 
@@ -24,43 +24,57 @@ def draw_cell(screen, cell, pos, cell_color, wall_color):
 
 
 class PygameGridVisitor(MazeVisitor):
-    def __init__(self, screen, cell_color, wall_color, offset=(0, 0)) -> None:
+    def __init__(self, screen, cell_color, wall_color, offset=(0, 0), **kwargs) -> None:
         super().__init__()
         self.screen = screen
         self.cell_color = cell_color
         self.wall_color = wall_color
         self.offset = offset
+        self.kwargs = kwargs
+        self.vars = {}
 
-    def visit_aldous_broder(self, maze, **kwargs):
+    def visit_aldous_broder(self, maze):
+        if maze.completed and "path" not in self.vars:
+            self.vars["path"] = self.kwargs["pathfinding"](maze, (0, 0), (maze.rows - 1, maze.columns - 1))
         def cell_color_decider(pos):
-            if pos == maze.current_cell:
-                return kwargs["current_color"]
-            if pos in maze.visited_cells:
-                return kwargs["visited_color"]
+            if maze.completed and pos in self.vars["path"]:
+                return self.kwargs["path_color"]
+            elif pos in maze.visited_cells:
+                return self.kwargs["visited_color"]
+            elif pos == maze.current_cell:
+                return self.kwargs["current_color"]
             return self.cell_color
         self.draw_grid(maze, cell_color_decider)
     
-    def visit_hunt_and_kill(self, maze, **kwargs):
+    def visit_hunt_and_kill(self, maze):
+        if maze.completed and "path" not in self.vars:
+            self.vars["path"] = self.kwargs["pathfinding"](maze, (0, 0), (maze.rows - 1, maze.columns - 1))
         def cell_color_decider(pos):
-            if pos[1] in maze.completed_rows:
-                return kwargs["completed_color"]
+            if maze.completed and pos in self.vars["path"]:
+                return self.kwargs["path_color"]
+            elif pos[1] in maze.completed_rows:
+                return self.kwargs["completed_color"]
             elif pos == maze.current_cell:
-                return kwargs["current_color"]
+                return self.kwargs["current_color"]
             elif maze.hunted_row != -1 and maze.hunted_row == pos[1]:
-                return kwargs["hunted_color"]
+                return self.kwargs["hunted_color"]
             elif pos in maze.visited_cells:
-                return kwargs["visited_color"]
+                return self.kwargs["visited_color"]
             return self.cell_color
         self.draw_grid(maze, cell_color_decider)
 
-    def visit_recursive_backtracking(self, maze, **kwargs):
+    def visit_recursive_backtracking(self, maze):
+        if maze.completed and "path" not in self.vars:
+            self.vars["path"] = self.kwargs["pathfinding"](maze, (0, 0), (maze.rows - 1, maze.columns - 1))
         def cell_color_decider(pos):
-            if pos in maze.completed_cells:
-                return kwargs["completed_color"]
+            if maze.completed and pos in self.vars["path"]:
+                return self.kwargs["path_color"]
+            elif pos in maze.completed_cells:
+                return self.kwargs["completed_color"]
             elif pos == maze.current_cell:
-                return kwargs["current_color"]
+                return self.kwargs["current_color"]
             elif pos in maze.visited_cells:
-                return kwargs["visited_color"]
+                return self.kwargs["visited_color"]
             return self.cell_color
         self.draw_grid(maze, cell_color_decider)
     
@@ -78,20 +92,28 @@ class PygameGridVisitor(MazeVisitor):
 screen = pg.display.set_mode((1161, 361))
 running = True
 
-first_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255))
-second_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), (800, 0))
-third_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), (400, 0))
 
 backtracker = RecursiveBacktrackerGrid(30, 30)
 aldous = AldousBroderGrid(30, 30)
 hunt_and_kill = HuntAndKillGrid(30, 30)
+
+first_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), current_color=(255, 255, 0), 
+                       visited_color=(255, 0, 0), completed_color=(0, 255, 0),
+                       pathfinding=find_path_astar, path_color=(255, 125, 0))
+second_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), (800, 0), current_color=(255, 255, 0), 
+                        visited_color=(0, 0, 255), hunted_color=(255, 0, 0), 
+                        completed_color=(0, 255, 0), pathfinding=find_path_astar,
+                        path_color=(255, 125, 0))
+third_visitor = PygameGridVisitor(screen, (0, 0, 0), (255, 255, 255), (400, 0), current_color=(255, 255, 0), 
+                        visited_color=(0, 255, 0), pathfinding=find_path_astar,
+                        path_color=(255, 125, 0))
+
 start_time = time.time()
 
 
 step_hunt_and_kill = True
-step_aldous = False
-step_backtracking = False
-astar_path = None
+step_aldous = True
+step_backtracking = True
 
 while running:
     screen.fill((0, 0, 0))
@@ -106,21 +128,15 @@ while running:
     
     if step_hunt_and_kill and not hunt_and_kill.step():
         print(f"Hunt and Kill took: {time.time() - start_time} seconds")
-        astar_path = find_path_astar(hunt_and_kill, (0, 0), (29, 29), )
         step_hunt_and_kill = False
     
     if step_aldous and not aldous.step():
         print(f"Aldous-Broder took: {time.time() - start_time} seconds")
         step_aldous = False
     
-    backtracker.accept(first_visitor, current_color=(255, 255, 0), visited_color=(255, 0, 0), completed_color=(0, 255, 0))
-    if step_hunt_and_kill:
-        hunt_and_kill.accept(second_visitor, current_color=(255, 255, 0), visited_color=(0, 0, 255), hunted_color=(255, 0, 0), completed_color=(0, 255, 0))
-    else:
-        for cell in astar_path:
-            pos = (cell[0] * CELL_SIZE[0] , cell[1] * CELL_SIZE[1])
-            draw_cell(screen, hunt_and_kill.grid[cell], pos, (255, 255, 0), (0, 0, 0))
-    aldous.accept(third_visitor, current_color=(255, 255, 0), visited_color=(0, 255, 0))
+    backtracker.accept(first_visitor)
+    hunt_and_kill.accept(second_visitor)
+    aldous.accept(third_visitor)
     
     pg.display.flip()
     

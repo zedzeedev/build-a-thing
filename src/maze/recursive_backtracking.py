@@ -14,9 +14,11 @@ class RecursiveBacktrackerGrid(Grid, Maze):
         self.visited_cells = []
         self.completed_cells = []
         self.current_cell = self.get_random_cell_pos()
+        self.completed = False
     
     def step(self):
         if len(self.completed_cells) == len(self.grid):
+            self.completed = True
             return False
         
         if self.current_cell not in self.visited_cells:
@@ -24,7 +26,7 @@ class RecursiveBacktrackerGrid(Grid, Maze):
         unvisited_directions = self.get_unvisited_directions()
         if len(unvisited_directions) == 0:
             self.completed_cells.append(self.current_cell)
-            self.visited_cells = self.visited_cells[:-2]
+            self.visited_cells = self.visited_cells[:-1]
             if len(self.visited_cells) > 0:
                 self.current_cell = self.visited_cells[-1]
             return True
@@ -43,5 +45,5 @@ class RecursiveBacktrackerGrid(Grid, Maze):
         return unvisited_directions
 
 
-    def accept(self, visitor, **kwargs):
-        visitor.visit_recursive_backtracking(self, **kwargs)
+    def accept(self, visitor):
+        visitor.visit_recursive_backtracking(self)

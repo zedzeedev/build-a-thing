@@ -8,9 +8,11 @@ class AldousBroderGrid(Grid, Maze):
         super().__init__(rows, columns, MazeCell())
         self.visited_cells = []
         self.current_cell = self.get_random_cell_pos()
+        self.completed = False
     
     def step(self):
         if len(self.visited_cells) == len(self.grid):
+            self.completed = True
             return False
         
         if self.current_cell not in self.visited_cells:
@@ -34,5 +36,5 @@ class AldousBroderGrid(Grid, Maze):
         return directions
 
 
-    def accept(self, visitor, **kwargs):
-        visitor.visit_aldous_broder(self, **kwargs)
+    def accept(self, visitor):
+        visitor.visit_aldous_broder(self)
